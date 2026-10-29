@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Escape de los Cuatro Castillos — Fracciones 2º ESO</title>
+<style>
+:root{--bg:#090711;--panel:#171226;--ink:#f5f0ff;--muted:#b9abc9;--gold:#ffc857;--violet:#7c3aed;--red:#ef4444;--green:#22c55e}
+*{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,Segoe UI,sans-serif;color:var(--ink);background:radial-gradient(circle at 50% -10%,#32164c 0,#100b1c 38%,#05040a 100%);min-height:100vh}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 3px,#ffffff05 4px)}
+.wrap{max-width:1180px;margin:auto;padding:28px}.hero{text-align:center;padding:20px 0}.hero h1{font-family:Georgia,serif;font-size:clamp(35px,6vw,68px);margin:0;color:#f8e8c8;text-shadow:0 0 20px #9b4dff}
+.hero p{color:var(--muted);font-size:18px}.card{background:#14101fee;border:1px solid #5f477d;border-radius:22px;box-shadow:0 18px 60px #0008;padding:24px}
+input{width:100%;padding:15px;border-radius:12px;border:1px solid #6e568a;background:#0d0a14;color:white;font-size:17px}.btn{border:0;border-radius:12px;padding:14px 20px;background:linear-gradient(135deg,#7c3aed,#a855f7);color:white;font-weight:800;cursor:pointer;font-size:16px}.btn:hover{filter:brightness(1.12)}
+.castles{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:25px 0}.castle{position:relative;min-height:210px;border-radius:20px;border:1px solid #453653;background:linear-gradient(#17111f,#0b0910);display:flex;align-items:end;justify-content:center;padding:18px;overflow:hidden;opacity:.38;filter:grayscale(1);transition:.5s}
+.castle:before{content:"🏰";position:absolute;font-size:118px;top:15px;filter:drop-shadow(0 0 12px #000)}.castle span{z-index:1;background:#09070cc7;padding:8px 12px;border-radius:20px}.castle.active{opacity:1;filter:none;border-color:#a855f7;box-shadow:0 0 30px #7c3aed66}.castle.done{opacity:1;filter:none;border-color:var(--gold);box-shadow:0 0 35px #ffc85766}.castle.done:before{filter:drop-shadow(0 0 22px #ffc857)}
+.progress{height:13px;background:#09070d;border-radius:20px;overflow:hidden;border:1px solid #463657}.bar{height:100%;width:0;background:linear-gradient(90deg,#7c3aed,#ffc857);transition:.5s}
+.qtop{display:flex;justify-content:space-between;gap:12px;align-items:center}
+.timer{font-family:ui-monospace,Consolas,monospace;font-size:26px;font-weight:900;color:#ffc857;background:#09070d;border:1px solid #6e568a;padding:9px 14px;border-radius:12px;box-shadow:0 0 18px #7c3aed55}
+.timer.danger{color:#ff5757;animation:pulse .75s infinite alternate}
+@keyframes pulse{to{transform:scale(1.06);box-shadow:0 0 24px #ef444488}}
+body,button,input{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg fill='none' stroke='%23eee6ff' stroke-width='1.2'%3E%3Ccircle cx='16' cy='16' r='3' fill='%239b4dff'/%3E%3Cpath d='M16 1v12M16 19v12M1 16h12M19 16h12M5 5l8.5 8.5M18.5 18.5L27 27M27 5l-8.5 8.5M13.5 18.5L5 27'/%3E%3Ccircle cx='16' cy='16' r='8'/%3E%3Ccircle cx='16' cy='16' r='13'/%3E%3C/g%3E%3C/svg%3E") 16 16,auto}
+.transition{position:fixed;inset:0;z-index:50;background:radial-gradient(circle,#3a1558,#07050b 65%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;opacity:0;pointer-events:none;transition:.35s}
+.transition.show{opacity:1;pointer-events:auto}.transition .big{font-size:150px;animation:castleGlow 1s ease-in-out infinite alternate}.transition h2{font-family:Georgia,serif;font-size:42px;color:#ffc857;text-shadow:0 0 20px #ffc857}
+@keyframes castleGlow{from{transform:scale(.86);filter:drop-shadow(0 0 4px #7c3aed)}to{transform:scale(1.06);filter:drop-shadow(0 0 40px #ffc857)}}.tag{color:var(--gold);font-weight:800}.problem{font-size:22px;line-height:1.55;margin:24px 0;background:#0d0a14;padding:22px;border-left:4px solid #a855f7;border-radius:12px}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:13px}.answer{padding:17px;text-align:left;background:#241b32;border:1px solid #5a4770;border-radius:13px;color:white;font-size:18px;cursor:pointer}.answer:hover{background:#352447}.answer.good{background:#12351f;border-color:#22c55e}.answer.bad{background:#41181c;border-color:#ef4444}
+.feedback{min-height:30px;margin:16px 0;font-weight:800}.hidden{display:none!important}.final{text-align:center}.final h2{font-size:45px;color:var(--gold)}.small{color:var(--muted)}.ghost{font-size:52px}
+@media(max-width:800px){.castles{grid-template-columns:1fr 1fr}.answers{grid-template-columns:1fr}}
+
+/* ===== TEMAS VISUALES DE LOS CUATRO CASTILLOS ===== */
+body{transition:background 1.1s ease}
+body.theme0{background:
+ radial-gradient(circle at 20% 18%,#4a1b5e55,transparent 24%),
+ radial-gradient(circle at 80% 10%,#38144e55,transparent 26%),
+ linear-gradient(#120817,#050308 68%)}
+body.theme1{background:
+ radial-gradient(circle at 50% 0,#234a6a88,transparent 31%),
+ linear-gradient(#071523,#02070d 72%)}
+body.theme2{background:
+ radial-gradient(circle at 15% 35%,#315b3155,transparent 28%),
+ radial-gradient(circle at 85% 28%,#193f2b66,transparent 28%),
+ linear-gradient(#07150d,#020805 72%)}
+body.theme3{background:
+ radial-gradient(circle at 50% 8%,#7b241f66,transparent 30%),
+ linear-gradient(#1b0707,#060202 72%)}
+
+.scene{position:relative;min-height:235px;margin:20px 0;border-radius:22px;overflow:hidden;border:1px solid #654c7e;
+box-shadow:inset 0 -50px 80px #0009,0 16px 45px #0008;transition:all .7s ease}
+.scene:before,.scene:after{position:absolute;content:"";pointer-events:none}
+.scene-art{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:118px;filter:drop-shadow(0 10px 12px #000);animation:floatCastle 3.5s ease-in-out infinite alternate}
+.scene-title{position:absolute;left:20px;bottom:18px;z-index:3;font-family:Georgia,serif;font-size:29px;font-weight:900;text-shadow:0 2px 12px #000}
+.scene-sub{position:absolute;right:20px;bottom:20px;z-index:3;color:#eee;background:#0009;padding:8px 12px;border-radius:20px}
+@keyframes floatCastle{to{transform:translateY(-7px)}}
+@keyframes fogMove{from{transform:translateX(-10%)}to{transform:translateX(10%)}}
+@keyframes lightning{0%,91%,100%{opacity:0}92%,94%{opacity:.8}93%,95%{opacity:.15}}
+@keyframes ember{from{transform:translateY(20px);opacity:.15}to{transform:translateY(-80px);opacity:.8}}
+
+.scene.theme0{background:linear-gradient(#31113f,#100817 62%,#050307)}
+.scene.theme0:before{content:"☠️   🪦   🪦   ☠️";font-size:44px;letter-spacing:18px;bottom:25px;left:8%;opacity:.65}
+.scene.theme0:after{content:"";inset:0;background:radial-gradient(ellipse at 50% 85%,#b96cff22,transparent 48%)}
+.scene.theme0 .scene-title{color:#dca8ff}
+
+.scene.theme1{background:linear-gradient(#153b59,#07111d 65%,#02060a)}
+.scene.theme1:before{content:"⚡";font-size:180px;right:10%;top:-40px;color:#dcecff;animation:lightning 5s infinite}
+.scene.theme1:after{content:"🌧️  🌧️  🌧️  🌧️";position:absolute;inset:0;font-size:34px;word-spacing:60px;opacity:.22;transform:rotate(-12deg)}
+.scene.theme1 .scene-title{color:#9fd9ff}
+
+.scene.theme2{background:linear-gradient(#17351f,#07160d 65%,#020704)}
+.scene.theme2:before{content:"🌲  🌲  🌲  🌲  🌲";font-size:74px;left:-20px;right:0;bottom:15px;white-space:nowrap;opacity:.75}
+.scene.theme2:after{content:"🌕";font-size:75px;right:9%;top:20px;filter:drop-shadow(0 0 25px #fff6a8)}
+.scene.theme2 .scene-title{color:#9ce5a8}
+
+.scene.theme3{background:linear-gradient(#4a1210,#180606 64%,#050202)}
+.scene.theme3:before{content:"🔥  🔥  🔥";font-size:52px;left:10%;bottom:10px;letter-spacing:80px;animation:ember 2.2s ease-in-out infinite alternate}
+.scene.theme3:after{content:"🦇  🦇  🦇";font-size:35px;right:7%;top:20px;letter-spacing:18px}
+.scene.theme3 .scene-title{color:#ffb06f}
+
+.doorRow{display:flex;justify-content:center;gap:10px;margin:12px 0 18px}
+.miniDoor{width:44px;height:58px;border-radius:18px 18px 4px 4px;background:#17101c;border:2px solid #665275;position:relative;transition:.5s;box-shadow:inset 0 0 12px #000}
+.miniDoor:after{content:"";width:5px;height:5px;border-radius:50%;background:#ffc857;position:absolute;right:7px;top:29px}
+.miniDoor.open{transform:perspective(100px) rotateY(-38deg);background:#ffc85755;border-color:#ffc857;box-shadow:0 0 18px #ffc85788}
+.miniDoor.current{border-color:#d79cff;box-shadow:0 0 18px #9b4dff}
+
+
+/* ===== PUERTA CINEMATOGRÁFICA DE MAZMORRA ===== */
+.dungeonWrap{display:flex;justify-content:center;margin:20px 0 26px;perspective:900px}
+.dungeonFrame{position:relative;width:min(420px,86vw);height:250px;border:14px solid #30283a;border-bottom-width:20px;border-radius:110px 110px 10px 10px;
+background:radial-gradient(circle at 50% 45%,#271c31,#060409 72%);box-shadow:0 0 0 4px #09070d,inset 0 0 45px #000,0 20px 45px #000a;overflow:hidden}
+.dungeonFrame:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 48px,#ffffff08 49px 51px),repeating-linear-gradient(0deg,transparent 0 38px,#0005 39px 41px);z-index:0}
+.darkBeyond{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:54px;background:radial-gradient(circle,#40145855,#020103 64%);text-shadow:0 0 20px #a855f7;opacity:.9}
+.doorLeaf{position:absolute;top:0;width:50.5%;height:100%;z-index:3;background:
+repeating-linear-gradient(90deg,#2b1b13 0 27px,#3c271a 28px 52px);
+border:3px solid #171016;box-shadow:inset 0 0 22px #000;transition:transform 1.25s cubic-bezier(.2,.8,.2,1)}
+.doorLeaf.left{left:0;transform-origin:left center;border-right:5px solid #0a0708}
+.doorLeaf.right{right:0;transform-origin:right center;border-left:5px solid #0a0708}
+.doorLeaf:before{content:"";position:absolute;left:0;right:0;top:46%;height:18px;background:#17151a;border-top:2px solid #55485c;border-bottom:2px solid #050405}
+.doorLeaf.left:after,.doorLeaf.right:after{content:"●";position:absolute;top:50%;font-size:25px;color:#d1a846;text-shadow:0 0 8px #ffc857}
+.doorLeaf.left:after{right:14px}.doorLeaf.right:after{left:14px}
+.dungeonFrame.open .left{transform:rotateY(-102deg)}
+.dungeonFrame.open .right{transform:rotateY(102deg)}
+.dungeonFrame.open{box-shadow:0 0 35px #a855f799,inset 0 0 45px #000,0 20px 45px #000a}
+.dungeonLabel{text-align:center;font-family:Georgia,serif;font-size:20px;color:#d8c7e7;margin-top:-14px;margin-bottom:15px}
+.dungeonFrame.shake{animation:doorShake .35s linear}
+@keyframes doorShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}50%{transform:translateX(7px)}75%{transform:translateX(-4px)}}
+.passFlash{position:fixed;inset:0;background:#fff;z-index:90;opacity:0;pointer-events:none}.passFlash.go{animation:flashPass .8s ease-out}
+@keyframes flashPass{0%{opacity:0}35%{opacity:.7}100%{opacity:0}}
+
+
+#scareOverlay{position:fixed;inset:0;z-index:9999;background:#000;display:none;align-items:center;justify-content:center;cursor:none}
+#scareOverlay.show{display:flex}
+#scareVideo{width:100vw;height:100vh;object-fit:cover;background:#000}
+</style></head>
+<body><div class="wrap">
+<section id="start" class="hero"><div class="ghost">🎃 👻 🦇</div><h1>Escape de los Cuatro Castillos</h1><p>Un escape room de fracciones · 2.º ESO</p>
+<div class="card" style="max-width:650px;margin:25px auto;text-align:left"><h2>El pacto de Halloween</h2><p>Cuatro castillos han quedado sellados. Cada puerta esconde un problema. Solo una respuesta rompe el hechizo. Si falláis, la puerta seguirá cerrada.</p><label><b>Nombre del equipo</b></label><input id="team" placeholder="Ej.: Los Cazafantasmas"><p class="small">Trabajad juntos en el Chromebook. Podéis hacer las operaciones en papel antes de responder.</p><button class="btn" onclick="startGame()">Entrar en la niebla</button></div></section>
+<section id="game" class="hidden">
+<div class="qtop"><div><b id="teamLabel"></b><div class="small">20 puertas · 4 castillos</div></div><div class="timer" id="timer">55:00</div><div class="tag" id="score">Puerta 1/20</div></div>
+<div class="castles"><div class="castle active" id="c0"><span>Castillo I · La Cripta</span></div><div class="castle" id="c1"><span>Castillo II · La Torre</span></div><div class="castle" id="c2"><span>Castillo III · El Bosque</span></div><div class="castle" id="c3"><span>Castillo IV · La Fortaleza</span></div></div>
+<div id="scene" class="scene theme0">
+  <div class="scene-art" id="sceneArt">🏚️</div>
+  <div class="scene-title" id="sceneTitle">La Cripta de las Almas</div>
+  <div class="scene-sub" id="sceneSub">5 puertas selladas</div>
+</div>
+<div class="doorRow" id="doorRow"></div>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<div class="card" style="margin-top:20px"><div class="tag" id="castleName"></div>
+<div class="dungeonWrap"><div class="dungeonFrame" id="dungeonFrame">
+<div class="darkBeyond" id="darkBeyond">🌫️</div>
+<div class="doorLeaf left"></div><div class="doorLeaf right"></div>
+</div></div>
+<div class="dungeonLabel" id="dungeonLabel">PUERTA I · SELLADA</div>
+<div class="problem" id="problem"></div><div class="answers" id="answers"></div><div class="feedback" id="feedback"></div></div>
+</section>
+<section id="finish" class="card final hidden"><div class="ghost">🔓🏰✨</div><h2>¡Habéis escapado!</h2><p id="finalText" style="font-size:21px"></p><p>Los cuatro castillos están iluminados. Pero… quizá no estabais solos.</p><button class="btn" onclick="playScare()">ABRIR LA ÚLTIMA PUERTA</button><p class="small">Aseguraos de tener el sonido activado antes de abrirla…</p><div id="videoBox"></div></section>
+</div>
+<div id="scareOverlay"><video id="scareVideo" src="video_final.mp4" preload="auto" playsinline></video></div><div class="passFlash" id="passFlash"></div><div class="transition" id="transition"><div class="big">🏰</div><h2 id="transitionTitle"></h2><p id="transitionText"></p></div>
+<audio id="bgMusic" src="bombinsound-halloween-suspense-horror-version-7-halloween-waltz-619340.mp3" loop preload="auto"></audio>
+<audio id="laughAudio" src="laffita-risa-238003.mp3" preload="auto"></audio>
+<audio id="doorAudio" src="dragon-studio-open-door-stock-sfx-454246.mp3" preload="auto"></audio>
+<script>
+const Q=[
+// CASTILLO I — NIVEL 1: reconocimiento y cálculo directo
+["En una clase hay 32 alumnos. Si 3/8 practican baloncesto, ¿cuántos alumnos lo practican?",["10","12","14","16"],1],
+["Un senderista recorre 1/4 del camino por la mañana y después 1/3 de lo que quedaba. ¿Qué fracción del camino queda sin recorrer?",["1/2","1/3","5/12","2/3"],0],
+["Los 3/5 de unos ahorros son 48 €. ¿Cuánto dinero había ahorrado en total?",["70 €","75 €","80 €","90 €"],2],
+["En un jardín, 1/3 es césped y 1/4 son flores. El resto está empedrado. ¿Qué fracción está empedrada?",["5/12","7/12","1/2","2/3"],0],
+["Una biblioteca tiene 72 libros de aventuras. Se prestan 5/6. ¿Cuántos libros se prestan?",["50","54","60","66"],2],
+
+// CASTILLO II — NIVEL 2: denominadores variados y dos pasos
+["Lucía gasta 2/5 de su dinero y después 1/4 de lo que le quedaba. ¿Qué fracción del dinero inicial conserva?",["9/20","3/10","7/20","11/20"],0],
+["Los 7/9 de la capacidad de un depósito son 84 L. ¿Cuál es su capacidad total?",["96 L","108 L","112 L","126 L"],1],
+["De un presupuesto, 5/12 se dedica a material y 1/6 a transporte. ¿Qué fracción queda disponible?",["1/3","5/12","7/12","1/2"],1],
+["Un almacén tiene 180 cajas. Se envían 7/12. ¿Cuántas cajas se envían?",["95","100","105","115"],2],
+["Un ciclista recorre primero 1/3 de una ruta y después 3/8 de lo que le quedaba. ¿Qué fracción de la ruta queda por recorrer?",["5/12","1/4","3/8","7/12"],0],
+
+// CASTILLO III — NIVEL 3: más cálculo, m.c.m. y fracciones menos cómodas
+["Los 5/8 de una colección son 135 cromos. ¿Cuántos cromos tiene la colección completa?",["200","208","216","225"],2],
+["En una finca, 3/10 del terreno es huerta y 5/12 es bosque. El resto es pradera. ¿Qué fracción es pradera?",["13/60","17/60","19/60","23/60"],1],
+["Un depósito pierde 2/7 de su contenido. Después se utiliza 3/5 de lo que quedaba. ¿Qué fracción del contenido inicial queda?",["2/7","3/7","6/35","1/5"],0],
+["Una ruta mide 225 km. Un equipo ha completado 11/15. ¿Cuántos kilómetros ha recorrido?",["150 km","160 km","165 km","175 km"],2],
+["De un presupuesto se emplea 1/4 en material, 2/9 en transporte y 1/6 en publicidad. ¿Qué fracción queda?",["11/36","13/36","5/12","17/36"],1],
+
+// CASTILLO IV — NIVEL 4: reto final, varios pasos y razonamiento inverso
+["Una exploradora recorre 1/5 de una ruta. Después hace 3/8 de lo que quedaba y, finalmente, 1/3 de lo que aún quedaba. ¿Qué fracción de la ruta queda sin recorrer?",["1/4","1/3","3/8","5/12"],1],
+["Los 7/12 de la capacidad de una cisterna son 154 L. ¿Cuál es la capacidad total?",["252 L","264 L","276 L","288 L"],1],
+["En una finca, 5/18 es cultivo, 7/24 es bosque y 1/9 es zona de edificios. ¿Qué fracción queda libre?",["19/72","21/72","23/72","25/72"],2],
+["Un almacén contiene 304 piezas. Se revisan 13/16. ¿Cuántas piezas se revisan?",["234","247","252","260"],1],
+["En un festival se vende por la mañana 2/9 de las entradas. Por la tarde se vende 3/5 de las que quedaban. Al final quedan 84 entradas. ¿Cuántas entradas había al principio?",["240","252","270","300"],2]
+];
+const names=["CASTILLO I · LA CRIPTA","CASTILLO II · LA TORRE MALDITA","CASTILLO III · EL BOSQUE NEGRO","CASTILLO IV · LA FORTALEZA"];
+const themes=[
+ {title:"La Cripta de las Almas",sub:"Tumbas, niebla violeta y secretos bajo tierra",art:"🏚️"},
+ {title:"La Torre de la Tormenta",sub:"Rayos y lluvia golpean la torre encantada",art:"🏰"},
+ {title:"El Castillo del Bosque Negro",sub:"Árboles malditos vigilan cada movimiento",art:"🏯"},
+ {title:"La Fortaleza Infernal",sub:"Fuego, murciélagos y la salida final",art:"🏰"}
+];
+let i=0,locked=false,timeLeft=55*60,timerHandle=null,audioCtx=null;
+function audio(){ return true }
+function doorSound(){const a=document.getElementById("doorAudio");a.pause();a.currentTime=0;a.volume=0.22;a.play().catch(()=>{})}
+function evilLaugh(){const a=document.getElementById("laughAudio");a.pause();a.currentTime=0;a.volume=0.18;a.play().catch(()=>{})}
+function startMusic(){const a=document.getElementById("bgMusic");a.volume=0.09;a.play().catch(()=>{})}
+function tick(){timeLeft--;let m=Math.max(0,Math.floor(timeLeft/60)),sec=Math.max(0,timeLeft%60);timer.textContent=String(m).padStart(2,"0")+":"+String(sec).padStart(2,"0");if(timeLeft<=300)timer.classList.add("danger");if(timeLeft<=0){clearInterval(timerHandle);locked=true;problem.textContent="⏳ El tiempo ha terminado. La niebla ha cerrado las puertas.";answers.innerHTML=""}}
+function castleTransition(completed,next){doorSound();transitionTitle.textContent="¡CASTILLO "+completed+" SUPERADO!";const msgs=["La cripta queda atrás. Un relámpago revela una torre en la distancia…","La tormenta cesa. Un sendero se abre hacia el Bosque Negro…","Los árboles se apartan. Al fondo arde la Fortaleza Infernal…","Los cuatro castillos brillan en la noche. La salida está cerca…"];
+transitionText.textContent=msgs[Math.max(0,completed-1)];transition.classList.add("show");setTimeout(()=>transition.classList.remove("show"),2200)}
+
+function startGame(){let t=document.getElementById("team").value.trim();if(!t)return alert("Escribid primero el nombre del equipo.");document.getElementById("teamLabel").textContent="Equipo: "+t;startMusic();start.classList.add("hidden");game.classList.remove("hidden");timerHandle=setInterval(tick,1000);render()}
+function render(){locked=false;let q=Q[i],c=Math.floor(i/5),d=i%5;
+document.body.classList.remove("theme0","theme1","theme2","theme3");document.body.classList.add("theme"+c);
+score.textContent=`Puerta ${i+1}/20`;castleName.textContent=names[c]+` · ${["NIVEL 1 · INICIACIÓN","NIVEL 2 · MEDIO","NIVEL 3 · DIFÍCIL","NIVEL 4 · RETO FINAL"][c]} · ENIGMA ${d+1}/5`;
+scene.className="scene theme"+c;sceneTitle.textContent=themes[c].title;sceneSub.textContent=themes[c].sub;sceneArt.textContent=themes[c].art;
+doorRow.innerHTML="";for(let z=0;z<5;z++){let md=document.createElement("div");md.className="miniDoor"+(z<d?" open":z===d?" current":"");doorRow.appendChild(md)}
+dungeonFrame.classList.remove("open","shake");dungeonLabel.textContent="PUERTA "+["I","II","III","IV","V"][d]+" · SELLADA";
+darkBeyond.textContent=["☠️","⚡","🌲","🔥"][c];
+problem.textContent=q[0];answers.innerHTML="";feedback.textContent="";
+q[1].forEach((a,n)=>{let b=document.createElement("button");b.className="answer";b.textContent=String.fromCharCode(65+n)+". "+a;b.onclick=()=>pick(n,b);answers.appendChild(b)});
+bar.style.width=(i/20*100)+"%";for(let x=0;x<4;x++){let el=document.getElementById("c"+x);el.className="castle"+(x<c?" done":x===c?" active":"")}}
+function pick(n,b){if(locked)return;let ok=Q[i][2];
+if(n!==ok){evilLaugh();b.classList.add("bad");dungeonFrame.classList.remove("shake");void dungeonFrame.offsetWidth;dungeonFrame.classList.add("shake");feedback.textContent="😈 ¡CLONK! La puerta sigue sellada… una risa resuena por el castillo. Revisad las operaciones.";setTimeout(()=>{b.classList.remove("bad");dungeonFrame.classList.remove("shake")},900);return}
+locked=true;doorSound();b.classList.add("good");dungeonLabel.textContent="🔓 PUERTA ABIERTA";feedback.textContent="¡Correcto! Las cadenas caen y la puerta comienza a abrirse…";dungeonFrame.classList.add("open");
+let completed=((i+1)%5===0),num=Math.floor(i/5)+1;
+setTimeout(()=>{passFlash.classList.remove("go");void passFlash.offsetWidth;passFlash.classList.add("go")},1050);
+setTimeout(()=>{i++;if(completed)castleTransition(num,i<20);if(i===20)setTimeout(finishGame,completed?2200:0);else render()},1550)}
+function finishGame(){clearInterval(timerHandle);game.classList.add("hidden");finish.classList.remove("hidden");bar.style.width="100%";finalText.textContent=document.getElementById("teamLabel").textContent+" ha superado las 20 puertas con "+timer.textContent+" restantes."}
+function playScare(){
+ const music=document.getElementById("bgMusic"); if(music) music.pause();
+ const ov=document.getElementById("scareOverlay"),v=document.getElementById("scareVideo");
+ ov.classList.add("show"); v.currentTime=0; v.volume=0.85;
+ if(ov.requestFullscreen){ov.requestFullscreen().catch(()=>{});}
+ v.play().catch(()=>{v.controls=true;});
+ v.onended=()=>{ if(document.fullscreenElement) document.exitFullscreen().catch(()=>{}); ov.classList.remove("show"); };
+}
+</script></body></html>
